@@ -1,8 +1,6 @@
-import { ElevenLabsClient } from "elevenlabs";
+import { toReadingSegments } from "@/lib/reading";
 
-const client = new ElevenLabsClient({
-  apiKey: process.env.ELEVENLABS_API_KEY,
-});
+export const maxDuration = 60;
 
 export async function POST(req: Request) {
   const body: unknown = await req.json();
@@ -23,26 +21,38 @@ export async function POST(req: Request) {
   }
 
   const voiceId = process.env.ELEVENLABS_VOICE_ID;
-  if (!voiceId) {
-    return new Response("ELEVENLABS_VOICE_ID not set", { status: 500 });
+  const apiKey = process.env.ELEVENLABS_API_KEY;
+  if (!voiceId || !apiKey) {
+    return new Response("ElevenLabs not configured", { status: 500 });
   }
 
-  const audio = await client.textToSpeech.convert(voiceId, {
-    text,
-    model_id: "eleven_multilingual_v2",
-    output_format: "mp3_44100_128",
-  });
+  // LLMで表記→読みのペアを生成。失敗時はnull（原文のままTTSに送る）
+  const segments = await toReadingSegments(text);
+  const ttsText = segments ? segments.map((s) => s.reading).join("") : text;
 
-  const chunks: Uint8Array[] = [];
-  for await (const chunk of audio) {
-    chunks.push(chunk);
-  }
-  const buffer = Buffer.concat(chunks);
-
-  return new Response(buffer, {
-    headers: {
-      "Content-Type": "audio/mpeg",
-      "Content-Length": buffer.length.toString(),
+  const res = await fetch(
+    `https://api.elevenlabs.io/v1/text-to-speech/${voiceId}/with-timestamps`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "xi-api-key": apiKey,
+      },
+      body: JSON.stringify({
+        text: ttsText,
+        model_id: "eleven_turbo_v2_5",
+        language_code: "ja",
+        output_format: "mp3_44100_128",
+      }),
     },
-  });
+  );
+
+  if (!res.ok) {
+    const err = await res.text();
+    return new Response(err, { status: res.status });
+  }
+
+  const data = (await res.json()) as Record<string, unknown>;
+
+  return Response.json({ ...data, segments });
 }
