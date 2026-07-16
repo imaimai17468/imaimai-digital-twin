@@ -31,7 +31,7 @@ function PlayButton({ text }: { text: string }) {
       const audio = new Audio(url);
       audioRef.current = audio;
       audio.onended = () => setState("idle");
-      audio.play();
+      void audio.play();
       setState("playing");
     } catch {
       setState("idle");
@@ -47,7 +47,12 @@ function PlayButton({ text }: { text: string }) {
       {state === "loading" ? (
         <svg className="w-4 h-4 animate-spin" viewBox="0 0 24 24" fill="none">
           <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" opacity="0.3" />
-          <path d="M12 2a10 10 0 0 1 10 10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+          <path
+            d="M12 2a10 10 0 0 1 10 10"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+          />
         </svg>
       ) : state === "playing" ? (
         <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
@@ -57,8 +62,20 @@ function PlayButton({ text }: { text: string }) {
       ) : (
         <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
           <path d="M14.667 12L8 7.2V16.8L14.667 12ZM16 12L6 5V19L16 12Z" />
-          <path d="M19.5 12a7.5 7.5 0 0 0-3-6" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round" />
-          <path d="M21.5 12a9.5 9.5 0 0 0-3.8-7.6" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round" />
+          <path
+            d="M19.5 12a7.5 7.5 0 0 0-3-6"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            fill="none"
+            strokeLinecap="round"
+          />
+          <path
+            d="M21.5 12a9.5 9.5 0 0 0-3.8-7.6"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            fill="none"
+            strokeLinecap="round"
+          />
         </svg>
       )}
     </button>
@@ -145,9 +162,7 @@ export default function Home() {
                 >
                   {text}
                 </div>
-                {message.role === "assistant" && text && !isLoading && (
-                  <PlayButton text={text} />
-                )}
+                {message.role === "assistant" && text && !isLoading && <PlayButton text={text} />}
               </div>
             </div>
           );
@@ -176,7 +191,7 @@ export default function Home() {
           onSubmit={(e) => {
             e.preventDefault();
             if (input.trim() && !isLoading) {
-              sendMessage({ text: input });
+              void sendMessage({ text: input });
               setInput("");
             }
           }}

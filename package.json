@@ -2,11 +2,20 @@
   "name": "imaimai-digital-twin",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
-    "dev": "next dev",
+    "prepare": "lefthook install",
+    "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "oxlint --type-aware src",
+    "lint:fix": "oxlint --type-aware --fix src",
+    "format": "oxfmt --check src",
+    "format:fix": "oxfmt --write src",
+    "knip": "knip",
+    "check": "bun run lint && bun run format",
+    "check:fix": "bun run lint:fix && bun run format:fix",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^4.0.15",
@@ -22,8 +31,11 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "eslint": "^9",
-    "eslint-config-next": "16.2.10",
+    "knip": "^6.26.0",
+    "lefthook": "2.1.10",
+    "oxfmt": "0.46.0",
+    "oxlint": "1.42.0",
+    "oxlint-tsgolint": "^0.24.0",
     "tailwindcss": "^4",
     "typescript": "^5"
   }
