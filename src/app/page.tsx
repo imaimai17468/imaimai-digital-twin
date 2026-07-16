@@ -4,21 +4,7 @@ import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
 import type { UIMessage } from "ai";
 import { useState, useRef, useEffect } from "react";
-import Image from "next/image";
-
-type Phase = "idle" | "thinking" | "streaming";
-
-const OUTER_CLASS: Record<Phase, string> = {
-  idle: "animate-wave-breathe",
-  thinking: "animate-wave-think",
-  streaming: "animate-wave-speak",
-};
-
-const INNER_CLASS: Record<Phase, string> = {
-  idle: "animate-wave-breathe-delayed",
-  thinking: "animate-wave-think-delayed",
-  streaming: "animate-wave-speak-delayed",
-};
+import { AvatarWithWave, type Phase } from "./avatar-with-wave";
 
 const transport = new DefaultChatTransport({ api: "/api/chat" });
 
@@ -27,34 +13,6 @@ function extractText(message: UIMessage): string {
     .filter((p): p is { type: "text"; text: string } => p.type === "text")
     .map((p) => p.text)
     .join("");
-}
-
-function AvatarWithWave({ phase }: { phase: Phase }) {
-  return (
-    <div className="relative w-32 h-32 flex items-center justify-center">
-      <div className={`absolute inset-0 rounded-full border border-accent ${OUTER_CLASS[phase]}`} />
-      <div className={`absolute inset-2 rounded-full border border-accent ${INNER_CLASS[phase]}`} />
-      <div className="relative w-24 h-24 rounded-full overflow-hidden">
-        <Image src="/avatar.png" alt="いまいまい" fill className="object-cover" priority />
-      </div>
-    </div>
-  );
-}
-
-function ResponseText({ text, visible }: { text: string; visible: boolean }) {
-  return (
-    <div
-      className={`text-center max-w-lg mx-auto px-6 transition-opacity duration-500 ${visible ? "opacity-100" : "opacity-0"}`}
-    >
-      <p className="text-sm leading-relaxed text-fg-primary">{text}</p>
-    </div>
-  );
-}
-
-function FadeOverlay() {
-  return (
-    <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-b from-transparent to-bg-deep" />
-  );
 }
 
 const SUGGESTIONS = ["自己紹介して", "AI駆動開発について", "技術スタックは？", "大事にしてること"];
@@ -115,9 +73,13 @@ export default function Home() {
       {hasMessages && (
         <div className="flex-1 min-h-0 w-full max-w-xl px-6 relative">
           <div ref={responseRef} className="overflow-y-auto h-full px-2">
-            <ResponseText text={lastAssistantText} visible={!!lastAssistantText && !isThinking} />
+            <div
+              className={`text-center max-w-lg mx-auto px-6 transition-opacity duration-500 ${lastAssistantText && !isThinking ? "opacity-100" : "opacity-0"}`}
+            >
+              <p className="text-sm leading-relaxed text-fg-primary">{lastAssistantText}</p>
+            </div>
           </div>
-          <FadeOverlay />
+          <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-b from-transparent to-bg-deep" />
         </div>
       )}
 
