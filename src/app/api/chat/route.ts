@@ -11,7 +11,18 @@ import { IMAIMAI_SYSTEM_PROMPT } from "@/lib/persona";
 export const maxDuration = 30;
 
 export async function POST(req: Request) {
-  const { messages }: { messages: UIMessage[] } = await req.json();
+  const body: unknown = await req.json();
+
+  if (
+    !body ||
+    typeof body !== "object" ||
+    !("messages" in body) ||
+    !Array.isArray((body as { messages: unknown }).messages)
+  ) {
+    return new Response("Invalid request: messages array required", { status: 400 });
+  }
+
+  const { messages } = body as { messages: UIMessage[] };
 
   const result = streamText({
     model: anthropic("claude-sonnet-5"),

@@ -1,19 +1,100 @@
 @import "tailwindcss";
 
 :root {
-  --background: #0d1117;
-  --foreground: #e6edf3;
+  --bg-deep: #1a1a18;
+  --bg-surface: #222220;
+  --bg-elevated: #2a2a27;
+  --fg-primary: #e8e4df;
+  --fg-secondary: #9e9a94;
+  --fg-muted: #6b6763;
+  --accent: #7a8f6e;
+  --accent-hover: #8da07f;
+  --user-bubble: #3d4a35;
+
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  background: var(--bg-deep);
+  color: var(--fg-primary);
+}
+
+@keyframes wave-breathe {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.15;
+  }
+  50% {
+    transform: scale(1.06);
+    opacity: 0.25;
+  }
+}
+
+@keyframes wave-think {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.2;
+  }
+  25% {
+    transform: scale(1.12);
+    opacity: 0.4;
+  }
+  50% {
+    transform: scale(1.04);
+    opacity: 0.15;
+  }
+  75% {
+    transform: scale(1.1);
+    opacity: 0.35;
+  }
+}
+
+@keyframes wave-speak {
+  0%,
+  100% {
+    transform: scale(1.02);
+    opacity: 0.3;
+  }
+  50% {
+    transform: scale(1.08);
+    opacity: 0.45;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  @keyframes wave-breathe {
+    0%,
+    100% {
+      opacity: 0.15;
+    }
+    50% {
+      opacity: 0.22;
+    }
+  }
+  @keyframes wave-think {
+    0%,
+    100% {
+      opacity: 0.2;
+    }
+    50% {
+      opacity: 0.35;
+    }
+  }
+  @keyframes wave-speak {
+    0%,
+    100% {
+      opacity: 0.3;
+    }
+    50% {
+      opacity: 0.4;
+    }
+  }
 }

@@ -5,7 +5,22 @@ const client = new ElevenLabsClient({
 });
 
 export async function POST(req: Request) {
-  const { text } = await req.json();
+  const body: unknown = await req.json();
+
+  if (
+    !body ||
+    typeof body !== "object" ||
+    !("text" in body) ||
+    typeof (body as { text: unknown }).text !== "string"
+  ) {
+    return new Response("Invalid request: text string required", { status: 400 });
+  }
+
+  const { text } = body as { text: string };
+
+  if (text.trim().length === 0) {
+    return new Response("text must not be empty", { status: 400 });
+  }
 
   const voiceId = process.env.ELEVENLABS_VOICE_ID;
   if (!voiceId) {
