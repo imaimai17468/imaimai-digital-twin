@@ -13,8 +13,12 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://twin.imaim.ai"),
   title: "いまいまい Digital Twin",
   description: "いまいまいのデジタルツイン — AI チャットボット",
+  twitter: {
+    card: "summary_large_image",
+  },
 };
 
 export default function RootLayout({
