@@ -1,8 +1,15 @@
 import { toReadingSegments } from "@/lib/reading";
+import { checkRateLimit } from "@/lib/rate-limit";
 
 export const maxDuration = 60;
 
+const MAX_TEXT_CHARS = 1500;
+
 export async function POST(req: Request) {
+  if (!(await checkRateLimit(req, "tts"))) {
+    return new Response("Too many requests", { status: 429 });
+  }
+
   const body: unknown = await req.json();
 
   if (
@@ -18,6 +25,10 @@ export async function POST(req: Request) {
 
   if (text.trim().length === 0) {
     return new Response("text must not be empty", { status: 400 });
+  }
+
+  if (text.length > MAX_TEXT_CHARS) {
+    return new Response("text too long", { status: 413 });
   }
 
   const voiceId = process.env.ELEVENLABS_VOICE_ID;

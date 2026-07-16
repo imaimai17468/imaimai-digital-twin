@@ -30,7 +30,7 @@ interface TtsResponse {
 const SUGGESTIONS = ["自己紹介して", "AI駆動開発について", "技術スタックは？", "大事にしてること"];
 
 export default function Home() {
-  const { messages, sendMessage, status } = useChat({ transport });
+  const { messages, sendMessage, status, error } = useChat({ transport });
   const [input, setInput] = useState("");
   const [visibleText, setVisibleText] = useState("");
   const [isSpeaking, setIsSpeaking] = useState(false);
@@ -154,6 +154,14 @@ export default function Home() {
   const displayText = isSpeaking ? visibleText : lastAssistantText;
   const showText = !!displayText && !isGenerating;
 
+  const errorMessage = error
+    ? error.message.includes("Too many requests")
+      ? "送信が多すぎます。1分ほど待ってからもう一度どうぞ"
+      : error.message.includes("Conversation too long")
+        ? "会話が長くなりすぎました。ページをリロードして新しく始めてください"
+        : "エラーが起きました。時間をおいてもう一度どうぞ"
+    : null;
+
   return (
     <div className="flex flex-col h-full items-center bg-bg-deep">
       <div
@@ -215,6 +223,10 @@ export default function Home() {
           </div>
           <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-b from-transparent to-bg-deep" />
         </div>
+      )}
+
+      {errorMessage && !isGenerating && (
+        <p className="shrink-0 text-xs text-center text-fg-secondary px-6 pb-1">{errorMessage}</p>
       )}
 
       <div className="shrink-0 w-full max-w-xl px-6 py-4">
