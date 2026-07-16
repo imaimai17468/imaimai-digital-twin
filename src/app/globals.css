@@ -18,6 +18,19 @@
 @theme inline {
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --color-bg-deep: var(--bg-deep);
+  --color-bg-surface: var(--bg-surface);
+  --color-bg-elevated: var(--bg-elevated);
+  --color-fg-primary: var(--fg-primary);
+  --color-fg-secondary: var(--fg-secondary);
+  --color-fg-muted: var(--fg-muted);
+  --color-accent: var(--accent);
+  --animate-wave-breathe: wave-breathe 4s var(--ease-in-out) 0s infinite;
+  --animate-wave-breathe-delayed: wave-breathe 4s var(--ease-in-out) 1.5s infinite;
+  --animate-wave-think: wave-think 1.8s var(--ease-in-out) 0s infinite;
+  --animate-wave-think-delayed: wave-think 1.8s var(--ease-in-out) 0.4s infinite;
+  --animate-wave-speak: wave-speak 1.2s var(--ease-in-out) 0s infinite;
+  --animate-wave-speak-delayed: wave-speak 1.2s var(--ease-in-out) 0.4s infinite;
 }
 
 body {
