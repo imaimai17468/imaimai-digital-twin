@@ -40,7 +40,10 @@ export default function Home() {
 
   return (
     <div className="flex flex-col h-full items-center bg-bg-deep">
-      {!hasMessages && <div className="flex-1" />}
+      <div
+        className={`transition-[flex] duration-700 ${hasMessages ? "flex-none" : "flex-1"}`}
+        style={{ transitionTimingFunction: "var(--ease-out)" }}
+      />
 
       <div className="shrink-0 flex flex-col items-center gap-4 w-full max-w-xl px-6 pt-8 pb-4">
         <AvatarWithWave phase={phase} />
@@ -53,7 +56,7 @@ export default function Home() {
               <button
                 key={s}
                 onClick={() => void sendMessage({ text: s })}
-                className="px-3 py-1.5 text-xs rounded-lg bg-bg-elevated text-fg-secondary active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+                className="px-3 py-1.5 text-xs rounded-lg bg-bg-elevated text-fg-secondary hover:text-fg-primary active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
               >
                 {s}
               </button>
@@ -62,7 +65,10 @@ export default function Home() {
         )}
       </div>
 
-      {!hasMessages && <div className="flex-1" />}
+      <div
+        className={`transition-[flex] duration-700 ${hasMessages ? "flex-none" : "flex-1"}`}
+        style={{ transitionTimingFunction: "var(--ease-out)" }}
+      />
 
       {hasMessages && lastUserText && (
         <div className="shrink-0 max-w-sm px-6 pb-2">
@@ -104,7 +110,7 @@ export default function Home() {
           <button
             type="submit"
             disabled={isThinking || isStreaming || !input.trim()}
-            className="rounded-lg px-4 py-2.5 text-sm font-medium bg-accent text-white disabled:opacity-30 active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+            className="rounded-lg px-4 py-2.5 text-sm font-medium bg-accent text-white hover:opacity-90 disabled:opacity-30 active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
           >
             送信
           </button>
