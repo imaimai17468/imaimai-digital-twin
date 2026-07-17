@@ -192,6 +192,9 @@ export default function Home() {
             ))}
           </div>
         )}
+        {!hasMessages && (
+          <p className="text-xs text-fg-muted">回答は本人の声で読み上げられます（音が出ます）</p>
+        )}
       </div>
 
       <div
